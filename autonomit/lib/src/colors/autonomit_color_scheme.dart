@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 // Add more theme colors here:
 const PrimaryColorBg = const Color(0xFF252531);
-const PrimaryColorFg = const Color(0xFF6883CC);
+const PrimaryColorFg = const Color(0xFF6681C8);
 
 const SecondaryColorBg = const Color(0xFF201E2B);
 const SecondaryColorFg = const Color(0xFF263c75);
@@ -22,6 +22,10 @@ class AutonomitColorScheme {
         buttonColor: PrimaryColorFg,
         textTheme: ButtonTextTheme.primary,
       ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ButtonStyle(
+              backgroundColor:
+                  MaterialStateProperty.all<Color>(PrimaryColorFg))),
       appBarTheme: base.appBarTheme
           .copyWith(backgroundColor: PrimaryColorBg, elevation: 0),
       scaffoldBackgroundColor: PrimaryColorBg,

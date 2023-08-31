@@ -2,6 +2,11 @@ import 'dart:math';
 
 import 'package:autonomit/src/widgets/card.dart';
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:autonomit/src/providers/mock_data.dart';
+
+String jsonMockData = jsonEncode(deviceGroupMockData);
+Map<String, dynamic> mockData = jsonDecode(jsonMockData);
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -9,6 +14,18 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+    var listSize = mockData['totalElements'];
+    List<Widget> cardArray = [
+      BigCard(
+        data: mockData,
+        key: Key('0'), // used to mark first card in array
+      ),
+      ...List.filled(
+          listSize + 1,
+          BigCard(
+            data: mockData,
+          ))
+    ];
     return Scaffold(
       appBar: AppBar(
         actions: <Widget>[
@@ -27,14 +44,7 @@ class HomePage extends StatelessWidget {
           ),
           child: ListView(
             padding: EdgeInsets.all(30.0),
-            children: <Widget>[
-              BigCard(),
-              BigCard(),
-              BigCard(),
-              BigCard(),
-              BigCard(),
-              BigCard(),
-            ],
+            children: cardArray,
           ),
         ),
       ),
