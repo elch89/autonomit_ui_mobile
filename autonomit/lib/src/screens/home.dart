@@ -1,5 +1,6 @@
 import 'dart:math';
 
+// import 'package:autonomit/src/utilities/device_group.dart';
 import 'package:autonomit/src/widgets/card.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
@@ -15,17 +16,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     var listSize = mockData['totalElements'];
-    List<Widget> cardArray = [
-      BigCard(
-        data: mockData,
-        key: Key('0'), // used to mark first card in array
-      ),
-      ...List.filled(
-          listSize + 1,
-          BigCard(
-            data: mockData,
-          ))
-    ];
+    // DeviceGroup dg = new DeviceGroup(data: mockData['content']);
     return Scaffold(
       appBar: AppBar(
         actions: <Widget>[
@@ -39,14 +30,16 @@ class HomePage extends StatelessWidget {
       ),
       body: Center(
         child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: min(screenWidth, minWidth),
-          ),
-          child: ListView(
-            padding: EdgeInsets.all(30.0),
-            children: cardArray,
-          ),
-        ),
+            constraints: BoxConstraints(
+              maxWidth: min(screenWidth, minWidth),
+            ),
+            child: ListView.builder(
+              padding: EdgeInsets.all(30.0),
+              itemCount: listSize + 1,
+              itemBuilder: (context, int index) => BigCard(
+                index: index,
+              ),
+            )),
       ),
     );
   }
