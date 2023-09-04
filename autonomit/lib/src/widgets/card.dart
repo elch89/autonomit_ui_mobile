@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 import 'package:autonomit/src/models/device_group.dart';
 import 'package:autonomit/src/widgets/device_status.dart';
@@ -12,7 +12,7 @@ class BigCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    int paddingRemover = Platform.isAndroid || Platform.isIOS ? 40 : 100;
+    int paddingRemover = kIsWeb ? 100 : 40;
     return Container(
       margin: EdgeInsets.only(bottom: 20.0, top: 20.0),
       padding: EdgeInsets.only(bottom: 20.0, top: 20.0),
