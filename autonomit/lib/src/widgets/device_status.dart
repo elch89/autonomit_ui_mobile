@@ -1,31 +1,16 @@
 import 'package:autonomit/src/models/device_group.dart';
 import 'package:flutter/material.dart';
-import 'package:image_size_getter/image_size_getter.dart';
-import 'package:image_size_getter/file_input.dart';
-import 'dart:io';
 
 import 'package:provider/provider.dart';
 
-int getImageDimensions(File file) {
-  final size = ImageSizeGetter.getSize(FileInput(file));
-  if (size.needRotate) {
-    final width = size.height;
-    return width;
-  } else {
-    return size.width;
-  }
-}
-
 class DeviceStatus extends StatelessWidget {
-  DeviceStatus({required this.index});
+  DeviceStatus({required this.index, this.plateWidth = 200});
+  final double plateWidth;
   final index;
   @override
   Widget build(BuildContext context) {
     List states = Provider.of<DeviceGroupModel>(context).getStates(index);
     Map<int, Widget> roundImages = {};
-    var plateWidth =
-        getImageDimensions(File('assets/images/misc/status_plate.png'))
-            .toDouble();
     Image statusPlate = Image.asset('assets/images/misc/status_plate.png');
     Image singleStatusPlate =
         Image.asset('assets/images/misc/status_plate.png');
@@ -148,8 +133,9 @@ class DeviceStatus extends StatelessWidget {
                     ),
                     Positioned(
                       bottom: 20.0,
-                      left: 0,
-                      child: Row(children: roundImages.values.toList()),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: roundImages.values.toList()),
                     )
                   ]));
   }
