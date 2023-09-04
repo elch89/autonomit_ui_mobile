@@ -21,58 +21,118 @@ class DeviceStatus extends StatelessWidget {
   final index;
   @override
   Widget build(BuildContext context) {
-    Image statusImage = Image.asset('assets/images/misc/status_plate.png');
-    if (index == 0) {
-      int maxIndex = Provider.of<DeviceGroupModel>(context).getMaxIndex();
-      switch (maxIndex) {
-        case 0:
-          statusImage =
-              Image.asset('assets/images/state/status-plate-alert.png');
-
-          break;
-        case 1:
-          statusImage =
-              Image.asset('assets/images/state/status-plate-warn.png');
-          break;
-        case 2:
-          statusImage =
-              Image.asset('assets/images/state/status-plate-okey.png');
-          break;
-        default:
-          statusImage = Image.asset('assets/images/misc/status_plate.png');
-      }
-    } else if (index > 0) {
-      switch (
-          Provider.of<DeviceGroupModel>(context).getStatusIndex(index - 1)) {
-        case 0:
-          statusImage = Image.asset('assets/images/state/card-alert.png');
-          break;
-        case 1:
-          statusImage = Image.asset('assets/images/state/card-warn.png');
-          break;
-        case 2:
-          statusImage = Image.asset('assets/images/state/card-okey.png');
-          break;
-        default:
-          statusImage = Image.asset('assets/images/misc/status_plate.png');
-      }
-    }
+    List states = Provider.of<DeviceGroupModel>(context).getStates(index);
+    Map<int, Widget> roundImages = {};
     var plateWidth =
         getImageDimensions(File('assets/images/misc/status_plate.png'))
             .toDouble();
+    Image statusPlate = Image.asset('assets/images/misc/status_plate.png');
+    Image singleStatusPlate =
+        Image.asset('assets/images/misc/status_plate.png');
+    //divider for image width set by amount of non zero states
+    double dimensions =
+        Provider.of<DeviceGroupModel>(context).countNonZeroStates(states);
+
+    bool isStatusSet = false;
+    /**Iterate through list of states and add UI conditionaly */
+    states.asMap().entries.toList().forEach((entry) {
+      int idx = entry.key;
+      int state = entry.value;
+
+      if (state > 0) {
+        /**
+         * State in states list has a value: add circles+text to '@roundImages' dictionery 
+         * depending on state and status card representing it. 
+         * Plate status is decided by most severe error '@isStatusSet'
+        */
+        switch (idx) {
+          case 0:
+            isStatusSet = true;
+            statusPlate =
+                Image.asset('assets/images/state/status-plate-alert.png');
+            roundImages.addAll({
+              idx: Stack(alignment: Alignment.center, children: [
+                Image.asset(
+                  'assets/images/state/round-0.png',
+                  width: plateWidth / dimensions,
+                ),
+                Text(
+                  state.toString(),
+                  style: TextStyle(fontSize: 16, color: Colors.white),
+                ),
+              ])
+            });
+            break;
+          case 1:
+            if (!isStatusSet) {
+              isStatusSet = true;
+              statusPlate =
+                  Image.asset('assets/images/state/status-plate-warn.png');
+            }
+            roundImages.addAll({
+              idx: Stack(alignment: Alignment.center, children: [
+                Image.asset(
+                  'assets/images/state/round-1.png',
+                  width: plateWidth / dimensions,
+                ),
+                Text(
+                  state.toString(),
+                  style: TextStyle(fontSize: 16, color: Colors.white),
+                ),
+              ])
+            });
+            break;
+          case 2:
+            if (!isStatusSet) {
+              isStatusSet = true;
+              statusPlate =
+                  Image.asset('assets/images/state/status-plate-okey.png');
+            }
+            roundImages.addAll({
+              idx: Stack(alignment: Alignment.center, children: [
+                Image.asset(
+                  'assets/images/state/round-2.png',
+                  width: plateWidth / dimensions,
+                ),
+                Text(
+                  state.toString(),
+                  style: TextStyle(fontSize: 16, color: Colors.white),
+                ),
+              ])
+            });
+            break;
+          default:
+        }
+      }
+    });
+    /**if only one state is available use respective status card */
+    if (roundImages.length == 1) {
+      switch (roundImages.keys.first) {
+        case 0:
+          singleStatusPlate = Image.asset('assets/images/state/card-alert.png');
+          break;
+        case 1:
+          singleStatusPlate = Image.asset('assets/images/state/card-warn.png');
+          break;
+        case 2:
+          singleStatusPlate = Image.asset('assets/images/state/card-okey.png');
+          break;
+        default:
+      }
+    }
     return Container(
         padding: EdgeInsets.all(16.0),
         child: Stack(
             alignment: AlignmentDirectional.center,
-            children: ((index > 0)
+            children: (roundImages.length == 1)
                 ? [
                     Positioned(
-                      child: statusImage,
+                      child: singleStatusPlate,
                     ),
                     Positioned(
                       child: Text(
                         Provider.of<DeviceGroupModel>(context)
-                            .getStatus(index - 1)
+                            .getStatus(index)
                             .toString(),
                         style: TextStyle(
                             fontSize: 20,
@@ -84,59 +144,13 @@ class DeviceStatus extends StatelessWidget {
                   ]
                 : [
                     Positioned(
-                      child: statusImage,
+                      child: statusPlate,
                     ),
                     Positioned(
-                      width: plateWidth,
                       bottom: 20.0,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Stack(alignment: Alignment.center, children: [
-                            Image(
-                              width: plateWidth / 3.1,
-                              image:
-                                  AssetImage('assets/images/state/round-0.png'),
-                            ),
-                            Text(
-                              Provider.of<DeviceGroupModel>(context)
-                                  .getTotalAnalytics()[0]
-                                  .toString(),
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.white),
-                            ),
-                          ]),
-                          Stack(alignment: Alignment.center, children: [
-                            Image(
-                              width: plateWidth / 3.1,
-                              image:
-                                  AssetImage('assets/images/state/round-1.png'),
-                            ),
-                            Text(
-                              Provider.of<DeviceGroupModel>(context)
-                                  .getTotalAnalytics()[1]
-                                  .toString(),
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.white),
-                            ),
-                          ]),
-                          Stack(alignment: Alignment.center, children: [
-                            Image(
-                              width: plateWidth / 3.1,
-                              image:
-                                  AssetImage('assets/images/state/round-2.png'),
-                            ),
-                            Text(
-                              Provider.of<DeviceGroupModel>(context)
-                                  .getTotalAnalytics()[2]
-                                  .toString(),
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.white),
-                            ),
-                          ]),
-                        ],
-                      ),
+                      left: 0,
+                      child: Row(children: roundImages.values.toList()),
                     )
-                  ])));
+                  ]));
   }
 }

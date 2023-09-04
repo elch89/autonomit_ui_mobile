@@ -1,6 +1,4 @@
 import 'dart:math';
-
-// import 'package:autonomit/src/utilities/device_group.dart';
 import 'package:autonomit/src/widgets/card.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
@@ -16,7 +14,6 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     var listSize = mockData['totalElements'];
-    // DeviceGroup dg = new DeviceGroup(data: mockData['content']);
     return Scaffold(
       appBar: AppBar(
         actions: <Widget>[

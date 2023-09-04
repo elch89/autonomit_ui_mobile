@@ -12,7 +12,7 @@ const deviceGroupMockData = {
         "subRules": ["string"],
         "entityId": "string"
       },
-      "states": [0, 0, 1]
+      "states": [0, 0, 0]
     },
     {
       "id": "string2",
@@ -23,7 +23,7 @@ const deviceGroupMockData = {
         "subRules": ["string"],
         "entityId": "string"
       },
-      "states": [0, 0, 2]
+      "states": [0, 1, 2]
     },
     {
       "id": "string3",
@@ -34,7 +34,7 @@ const deviceGroupMockData = {
         "subRules": ["string"],
         "entityId": "string"
       },
-      "states": [0, 0, 1]
+      "states": [0, 2, 0]
     },
     {
       "id": "string4",
@@ -45,7 +45,7 @@ const deviceGroupMockData = {
         "subRules": ["string"],
         "entityId": "string"
       },
-      "states": [0, 0, 1]
+      "states": [3, 4, 1]
     },
   ],
   "number": 1,

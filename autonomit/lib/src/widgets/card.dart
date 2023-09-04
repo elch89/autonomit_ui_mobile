@@ -10,7 +10,6 @@ class BigCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    // print(index);
     return Container(
       margin: EdgeInsets.only(bottom: 20.0, top: 20.0),
       padding: EdgeInsets.only(bottom: 20.0, top: 20.0),
@@ -44,19 +43,17 @@ class BigCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(10.0),
           color: theme.cardColor,
           boxShadow: [
-            index == 0
-                ? BoxShadow(
-                    color: switch (Provider.of<DeviceGroupModel>(context)
-                        .getMaxIndex()
-                        .toString()) {
-                      '0' => Colors.redAccent,
-                      '1' => Colors.orangeAccent,
-                      '2' => Colors.greenAccent,
-                      _ => Colors.redAccent,
-                    },
-                    blurRadius: 6.0,
-                    blurStyle: BlurStyle.outer)
-                : BoxShadow(),
+            BoxShadow(
+                color: switch (Provider.of<DeviceGroupModel>(context)
+                    .setShadowColor(index)
+                    .toString()) {
+                  '0' => Colors.redAccent,
+                  '1' => Colors.orangeAccent,
+                  '2' => Colors.greenAccent,
+                  _ => Colors.transparent,
+                },
+                blurRadius: 6.0,
+                blurStyle: BlurStyle.outer),
           ]),
     );
   }
