@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:autonomit/src/models/device_group.dart';
 import 'package:autonomit/src/widgets/device_status.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +12,7 @@ class BigCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    int paddingRemover = Platform.isAndroid || Platform.isIOS ? 40 : 100;
     return Container(
       margin: EdgeInsets.only(bottom: 20.0, top: 20.0),
       padding: EdgeInsets.only(bottom: 20.0, top: 20.0),
@@ -36,7 +39,7 @@ class BigCard extends StatelessWidget {
               elevation: 0,
               child: DeviceStatus(
                 index: index,
-                plateWidth: constraints.minWidth - 40, //40 is layout padding
+                plateWidth: constraints.minWidth - paddingRemover,
               ),
             ),
           ],

@@ -11,6 +11,7 @@ class DeviceStatus extends StatelessWidget {
   Widget build(BuildContext context) {
     List states = Provider.of<DeviceGroupModel>(context).getStates(index);
     Map<int, Widget> roundImages = {};
+    print(plateWidth);
     Image statusPlate = Image.asset('assets/images/misc/status_plate.png');
     Image singleStatusPlate =
         Image.asset('assets/images/misc/status_plate.png');
