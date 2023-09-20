@@ -1,19 +1,27 @@
 import 'dart:math';
+import 'package:autonomit/src/constants/dimensions.dart';
+import 'package:autonomit/src/models/device_group_model.dart';
 import 'package:autonomit/src/widgets/card.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'package:autonomit/src/providers/mock_data.dart';
-
-String jsonMockData = jsonEncode(deviceGroupMockData);
-Map<String, dynamic> mockData = jsonDecode(jsonMockData);
+import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
   final minWidth = 500.0;
+  final _controller = ScrollController();
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    var listSize = mockData['totalElements'];
+    dynamic listSize = Provider.of<DeviceGroupModel>(context).listLength;
+    _controller.addListener(() {
+      double maxScroll = _controller.position.maxScrollExtent;
+      double minScroll = _controller.position.minScrollExtent;
+      double currentScroll = _controller.position.pixels;
+      if (maxScroll == currentScroll) {
+        Provider.of<DeviceGroupModel>(context, listen: false).loadNextPage();
+      } else if (minScroll == currentScroll) {
+        Provider.of<DeviceGroupModel>(context, listen: false).loadFirstPage();
+      }
+    });
     return Scaffold(
       appBar: AppBar(
         actions: <Widget>[
@@ -28,14 +36,23 @@ class HomePage extends StatelessWidget {
       body: Center(
         child: ConstrainedBox(
             constraints: BoxConstraints(
-              maxWidth: min(screenWidth, minWidth),
+              maxWidth: min(ScreenDimensions.screenWidth(context), minWidth),
             ),
-            child: ListView.builder(
-              padding: EdgeInsets.all(30.0),
-              itemCount: listSize + 1,
-              itemBuilder: (context, int index) => BigCard(
-                index: index,
-              ),
+            child: Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    controller: _controller,
+                    padding: EdgeInsets.all(30.0),
+                    itemCount: listSize,
+                    itemBuilder: (context, int index) => BigCard(
+                      index: index,
+                      stateData:
+                          Provider.of<DeviceGroupModel>(context).statesList,
+                    ),
+                  ),
+                ),
+              ],
             )),
       ),
     );

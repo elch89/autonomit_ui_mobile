@@ -1,50 +1,33 @@
-import 'package:flutter/foundation.dart' show kIsWeb;
-
-import 'package:autonomit/src/models/device_group.dart';
+import 'package:autonomit/src/models/device_group_model.dart';
 import 'package:autonomit/src/widgets/device_status.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class BigCard extends StatelessWidget {
-  const BigCard({this.index});
-  final index;
+  const BigCard({required this.index, required this.stateData});
+  final int index;
+  final stateData;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    int paddingRemover = kIsWeb ? 100 : 40;
     return Container(
       margin: EdgeInsets.only(bottom: 20.0, top: 20.0),
       padding: EdgeInsets.only(bottom: 20.0, top: 20.0),
-      child: LayoutBuilder(builder: (context, constraints) {
-        return Column(
-          children: [
-            index == 0
-                ? Text(
-                    'All',
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  )
-                : Text(
-                    Provider.of<DeviceGroupModel>(context)
-                        .getDeviceName(index - 1),
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
-            Card(
-              elevation: 0,
-              child: DeviceStatus(
-                index: index,
-                plateWidth: constraints.minWidth - paddingRemover,
-              ),
-            ),
-          ],
-        );
-      }),
+      child: Column(
+        children: [
+          Text(
+            stateData[index]['name'].toString(),
+            style: TextStyle(
+                fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+          ),
+          Card(
+            elevation: 0,
+            child:
+                DeviceStatus(index: index, states: stateData[index]['states']),
+          ),
+        ],
+      ),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),
           color: theme.cardColor,
@@ -56,7 +39,7 @@ class BigCard extends StatelessWidget {
                   '0' => Colors.redAccent,
                   '1' => Colors.orangeAccent,
                   '2' => Colors.greenAccent,
-                  _ => Colors.transparent,
+                  _ => Colors.greenAccent,
                 },
                 blurRadius: 6.0,
                 blurStyle: BlurStyle.outer),
